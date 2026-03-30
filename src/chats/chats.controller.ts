@@ -1,0 +1,34 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete,ParseIntPipe,ValidationPipe } from '@nestjs/common';
+import { ChatsService } from './chats.service';
+import {CreateChatsDto} from "./dto/create-chats.dto"
+import {UpdateChatsDto} from "./dto/update-chats.dto"
+
+@Controller('chats')
+export class ChatsController {
+  constructor(private readonly chatsService: ChatsService) {}
+
+  @Post()
+  create(@Body(ValidationPipe) createChatDto: CreateChatsDto) {
+    return this.chatsService.create(createChatDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.chatsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id',ParseIntPipe) id: number) {
+    return this.chatsService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id',ParseIntPipe) id: number, @Body(ValidationPipe) updateChatDto: UpdateChatsDto) {
+    return this.chatsService.update(id, updateChatDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id',ParseIntPipe) id: number) {
+    return this.chatsService.remove(id);
+  }
+}

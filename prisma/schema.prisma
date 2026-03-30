@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -26,3 +26,57 @@ enum Role {
   ENGINEER
   ADMIN
 }
+
+
+model User{
+  id Int @id @default(autoincrement())
+  first_name String 
+  last_name String?
+  password String
+  email String @unique 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  messages Message[]
+  chatMembers ChatMember[]
+}
+
+
+model Chat{
+  id Int @id @default(autoincrement())
+  isGroup Boolean @default(false)
+  groupName String?
+  messages Message[]
+  chatMembers ChatMember[]
+}
+model ChatMember{
+role userRole 
+unreadCount Int 
+lastOpenAt DateTime 
+userId Int 
+chatId Int 
+user User @relation(fields:[userId],references:[id])
+chat Chat @relation(fields:[chatId],references:[id])
+@@id([userId,chatId])
+}
+
+model Message{
+  id Int @id @default(autoincrement())
+  content String 
+  isVisible Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  senderId Int 
+  sender User @relation(fields:[senderId],references:[id])
+  chatId Int
+  chat Chat @relation(fields:[chatId],references:[id])
+
+}
+
+enum userRole{
+ADMIN
+BASE
+}
+
+
+
+
