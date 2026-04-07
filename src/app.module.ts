@@ -8,9 +8,10 @@ import { EmployeesModule } from './employees/employees.module';
 import { UserModule } from './user/user.module';
 import { ChatsModule } from './chats/chats.module';
 import { MessagesModule } from './messages/messages.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UsersModule, DatabaseModule, EmployeesModule, ChatsModule, MessagesModule,UserModule],
+  imports: [UsersModule, DatabaseModule, EmployeesModule, ChatsModule, MessagesModule,UserModule,AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
