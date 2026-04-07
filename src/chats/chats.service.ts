@@ -15,6 +15,14 @@ constructor(private readonly databaseService:DatabaseService){}
  async findAll() {
     return await this.databaseService.chat.findMany();
   }
+  async findAllUserChats(id:number)
+  {
+    return await this.databaseService.chat.findMany(
+    {where:{chatMembers:{some:{userId:id}}},
+    include:{chatMembers:{include:{user:{select:{id:true,first_name:true,last_name:true}}}},
+    messages:{take:1,orderBy:{createdAt:'desc'}}
+  }})
+  }
 
  async findOne(id: number) {
     return await this.databaseService.chat.findUnique({where:{id}})
