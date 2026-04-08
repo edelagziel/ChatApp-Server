@@ -24,6 +24,11 @@ constructor(private readonly databaseService:DatabaseService){}
   }})
   }
 
+  async findAllChatMsg(id:number)
+  {
+    return await this.databaseService.message.findMany({where:{chatId:id},orderBy:{createdAt:"asc"},include:{sender:{select:{id:true,first_name:true,last_name:true}}}})
+  }
+
  async findOne(id: number) {
     return await this.databaseService.chat.findUnique({where:{id}})
   }

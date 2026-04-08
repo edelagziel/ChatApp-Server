@@ -29,6 +29,13 @@ export class ChatsController {
       return chatsFounds ?? [];
   }
 
+  @Get("msg/:id")
+  async findAllChatMsg(@Param("id",ParseIntPipe)id:number)
+  {
+    const chatMsgFounds=await this.chatsService.findAllChatMsg(id)
+    return chatMsgFounds ?? [] ;
+  }
+
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const chatsFound = await this.chatsService.findOne(id);
