@@ -50,8 +50,8 @@ model Chat{
 }
 model ChatMember{
 role userRole 
-unreadCount Int 
-lastOpenAt DateTime 
+unreadCount Int @default(0)
+lastOpenAt DateTime @default(now())
 userId Int 
 chatId Int 
 user User @relation(fields:[userId],references:[id])

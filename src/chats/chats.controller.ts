@@ -5,8 +5,6 @@ import {UpdateChatsDto} from "./dto/update-chats.dto"
 
 //need to open chat member controller  !!!!!
 
-
-
 @Controller('chats')
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}

@@ -1,16 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {CreateChatsDto} from "./dto/create-chats.dto"
 import {UpdateChatsDto} from "./dto/update-chats.dto"
 import { DatabaseService } from 'src/database/database.service';
-
 
 @Injectable()
 export class ChatsService {
 constructor(private readonly databaseService:DatabaseService){}
 
- async create(createChatDto: CreateChatsDto) {
-   return  await this.databaseService.chat.create({data:createChatDto})
+
+
+
+
+  private async getAllMembersIdFromEmails(createChatDto: CreateChatsDto):Promise<number[]>
+  {
+    const targetEmails=createChatDto.emails;
+   const foundUsers= await this.databaseService.user.findMany({where:{email:{in:targetEmails}}})
+   if(foundUsers.length!==targetEmails.length) throw new NotFoundException("One or more users were not found")
+    return foundUsers.map((user)=>user.id)
   }
+
+ async create(createChatDto: CreateChatsDto) {
+    const usersIds= await this.getAllMembersIdFromEmails(createChatDto)
+    const OrguserId=createChatDto.userId;
+    const allUsersIds=[...usersIds,OrguserId];
+
+   return  await this.databaseService.chat.create({data:{
+    isGroup:createChatDto.isGroup,
+    groupName: createChatDto.groupName,
+    chatMembers:{
+      create:allUsersIds.map((CurUserId)=>({
+          userId:CurUserId,
+          role: OrguserId===CurUserId ? 'ADMIN' : 'BASE',
+          unreadCount:0,
+          lastOpenAt: new Date()
+      })
+       )
+    }
+   },include:{
+    chatMembers:{
+      include:{user:true}
+    }
+   }})}
 
  async findAll() {
     return await this.databaseService.chat.findMany();
