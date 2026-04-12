@@ -69,7 +69,6 @@ model Message{
   sender User @relation(fields:[senderId],references:[id])
   chatId Int
   chat Chat @relation(fields:[chatId],references:[id])
-
 }
 
 enum userRole{
